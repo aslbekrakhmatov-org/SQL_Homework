@@ -13,9 +13,9 @@ insert into test_identity(name)
 values('a'), ('b'), ('c'), ('d'), ('e');
 select * from test_identity;
 
-drop table test_identity;
 delete from test_identity;
 truncate table test_identity;
+drop table test_identity;
 
 --Answers:
 ----1. When we use delete, identity column's values doesn't reset.

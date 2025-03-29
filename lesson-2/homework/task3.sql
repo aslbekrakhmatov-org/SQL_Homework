@@ -12,3 +12,4 @@ select 1, bulkcolumn
 from openrowset(bulk 'C:\Users\Aslbek Rakhmatov\Downloads\Telegram Desktop\IMG_2257.PNG', single_blob)
 as image;
 
+select * from photos;
