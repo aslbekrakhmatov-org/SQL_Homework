@@ -75,17 +75,13 @@ group by c.CustomerID, c.CustomerName
 having COUNT(o.OrderID)>1
 
 --task5
-with Max_Product_Table as (SELECT o.OrderID, max(Price) as MaxPrice
-	from Orders o
-	join OrderDetails od
-	on o.OrderID=od.OrderID
-	group by o.OrderID)
-
-select MPT.OrderID, od.ProductID ,MPT.MaxPrice
-from Max_Product_Table MPT
+select OrderID, ProductID, Price
+from (select o.OrderID, od.ProductID, od.Price, 
+dense_rank() over(partition by o.OrderID order by price desc) as price_rank
+from Orders o
 join OrderDetails od
-on MPT.OrderID=od.OrderID
-where MPT.MaxPrice=od.Price
+on o.OrderID=od.OrderID) help_table
+where price_rank=1;
 
 --task6
 with Cus_Ord_Table as (select c.CustomerID, c.CustomerName, o.OrderDate, o.OrderID,
@@ -141,3 +137,12 @@ from TotalSpent_Table tst
 join Customers c
 on tst.CustomerID=c.CustomerID
 
+-- task9(optimal)
+SELECT c.CustomerName
+FROM Orders o
+JOIN OrderDetails od ON o.OrderID = od.OrderID
+JOIN Products p ON p.ProductID = od.ProductID
+JOIN Customers c ON c.CustomerID = o.CustomerID
+GROUP BY c.CustomerName
+HAVING COUNT(DISTINCT p.Category) = 1
+   AND MAX(p.Category) = 'Electronics';
